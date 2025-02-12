@@ -1,58 +1,72 @@
-// Unknown 타입
-function unknownExam() {
-  // 업캐스팅
-  let a: unknown = 1;
-  let b: unknown = "Hi";
-  let c: unknown = true;
-  let d: unknown = null;
-  let e: unknown = undefined;
+// 객체 타입간의 호환성
+// 어떤 객체타입을 다른 객체타입으로 취급해도 괜찮은가
 
-  let unknownVar: unknown;
-  // 다운 캐스팅 - 모두 에러
-  // let num: number = unknownVar;
-  // let str: string = unknownVar;
-  // let bool: boolean = unknownVar;
+type Animal = {
+  name: string;
+  color: string;
 };
 
-// never 타입
-// never타입은 모든 타입의 서브(자식)타입, 공집합
-function neverExam() {
-  function neverFunc(): never {
-    while(true){}
-  }
-
-  let num: number = neverFunc();
-  let str: string = neverFunc();
-  let bool: boolean = neverFunc();
-
-  // 다운 캐스팅 - 모두 에러
-  // let never1: never = 10;
-  // let never2: never = "string";
-  // let never3: never = true;
+type Dog = {
+  name: string;
+  color: string;
+  breed: string;
 };
 
-// void타입
-function voidExam() {
-  function voidFunc(): void {
-    console.log("hi");
-    return undefined; // undefined는 void의 자식 타입이므로 가능
-  }
-
-  let voidVar: void = undefined;
+let animal: Animal = {
+  name: "기린",
+  color: "yellow",
 };
 
-// any 타입
-// any타입은 자기한테 오는 업캐스팅, 다운캐스팅 모두 가능하다
-function anyExam() {
-  let unknownVar: unknown;
-  let anyVar: any;
-  let undefinedVar: undefined;
-  let neverVar: never;
-
-  anyVar = unknownVar; // any 타입이 unKnown 타입의 자식타입이지만 가능!
-  // any타입 한정으로 unKnown타입도 다운캐스팅 가능
-
-  undefinedVar = anyVar; // undefined타입이 any타입의 자식타입이지만 가능!
-
-  // neverVar = anyVar; // 에러, never 타입에 다운캐스팅은 불가능
+let dog: Dog = {
+  name: "강쥐",
+  color: "white",
+  breed: "물개",
 };
+
+animal = dog; // OK, 업캐스팅
+// dog = animal;  // 에러, 다운캐스팅
+// 객체들도 기본타입들 처럼 서로 슈퍼타입 - 서브타입 관계를 가진다
+// 같은 속성을 가지면서 속성이 더 적은 타입이 슈퍼타입이 된다.
+
+
+type Book = {
+  name: string;
+  price: number;
+};
+
+type ProgrammingBook = {
+  name: string;
+  price: number;
+  skill: string;
+};
+
+let book: Book;
+let programmingBook: ProgrammingBook = {
+  name: "한 입 크기로 잘라먹는 리액트",
+  price: 33000,
+  skill: "react",
+};
+
+book = programmingBook;
+console.log(book); // { name: '한 입 크기로 잘라먹는 리액트', price: 33000, skill: 'react' }
+// 속성이 name, price인 타입인 book 변수에 속성이 3개인 programmingBook 변수 값 넣기 가능
+
+// * 초과 프로퍼티 검사
+// let book2: Book = {
+//   name: "짱 재밌는 책";
+//   price: 12000
+//   skill: "java"
+// };
+// 에러, 하지만 다시 타입이 Book인 변수에 속성이 3개인 객체를 넣으려고 하니까 에러가난다
+// 초과 프로퍼티는 변수를 초기화할 때 초기화하는 값으로 객체 리터럴을 넣으면 실행된다
+// 그래서 실제 타잉에 정의해놓지 않은 속성이 들어오면 에러가 난다
+// 단 변수를 넣을 때는 검사를 하지 않기 때문에 book = programmingBook 이 가능 했던 것
+
+// 이렇게 파라미터로 객체 리터럴을 넣을 때도 초과프로퍼티 검사가 실행되기 때문에
+// 아래 코드도 에러가 난다
+// function func(book: Book){};
+// func({
+//   name: "소설책",
+//   price: 2400,
+//   skill: "vue",
+// });
