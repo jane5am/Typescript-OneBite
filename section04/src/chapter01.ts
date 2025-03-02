@@ -13,7 +13,7 @@ type Operation2 = {
   // 호출시그니터 타입에서는 변수의 타입도 같이 설정해줄 수 있다
   name: string;
 };
-
+ 
 const add3: Operation2 = (a, b) => a + b;
 const sub2:Operation2 = (a, b) => a - b;
 const mul2:Operation2 = (a, b) => a * b;
